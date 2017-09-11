@@ -32,15 +32,21 @@ function getRepoContributors(repoOwner, repoName, cb) {
   .on('end', function() {
     console.log("Download Complete: See who helped to link and build the vision, my guy!");
     string = JSON.parse(string);
-    return cb(string);
+    cb(string);
   })
 
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err);
-  console.log("Result:", result);
-});
+var  getAvatars = function(jsonOBJ) {
+  var i = 1
+  for(var j in jsonOBJ)
+    console.log(jsonOBJ[j].avatar_url);
+}
+
+
+getRepoContributors("jquery", "jquery", getAvatars);
+
+
 
 
 
