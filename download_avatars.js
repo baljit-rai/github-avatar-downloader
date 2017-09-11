@@ -31,6 +31,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
   .on('end', function() {
     console.log("Download Complete: See who helped to link and build the vision, my guy!");
+    string = JSON.parse(string);
     return cb(string);
   })
 
