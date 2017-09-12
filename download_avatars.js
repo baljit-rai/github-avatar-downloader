@@ -1,4 +1,3 @@
-
 var fs = require('fs');
 var https = require('https');
 var request = require('request');
@@ -9,6 +8,14 @@ var repoOwner = process.argv[2];
 var repoName = process.argv[3];
 
 console.log('A suh dude, Welcome to the GitHub Avatar Downloader!');
+
+function checkArgs (owner, name) {
+  if ( owner === undefined || name === undefined) {
+    console.log( " Bruh......, enter the correct arguments");
+  } else {
+      getRepoContributors(repoOwner, repoName, getAvatars);
+  }
+}
 
 function getRepoContributors(repoOwner, repoName, cb) {
   var requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
@@ -54,18 +61,19 @@ function downloadImageByURL(url, filePath, userName) {
     })
 
     .on('data', function(data) {
-       console.log('Put your feet up fam, downloading avatar....');
+       console.log('Hold up fam, downloading avatar....');
+       console.log("Download Complete: See who helped to link and build the vision, my guy!");
+
     })
 
     .on('end', function() {
-      console.log("Download Complete: See who helped to link and build the vision, my guy!");
     })
     .pipe(fs.createWriteStream(filePath + '/' + userName));
 
 }
 
+checkArgs(repoOwner, repoName);
 
-getRepoContributors(repoOwner, repoName, getAvatars);
 
 
 
