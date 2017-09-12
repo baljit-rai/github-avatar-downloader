@@ -5,6 +5,8 @@ var request = require('request');
 var GITHUB_USER = "baljit-rai";
 var GITHUB_TOKEN = "6856000a09972c30cd8a887e42dc0a56afbc896e";
 var UserAgent = 'baljit-rai: ';
+var repoOwner = process.argv[2];
+var repoName = process.argv[3];
 
 console.log('A suh dude, Welcome to the GitHub Avatar Downloader!');
 
@@ -63,7 +65,7 @@ function downloadImageByURL(url, filePath, userName) {
 }
 
 
-getRepoContributors("jquery", "jquery", getAvatars);
+getRepoContributors(repoOwner, repoName, getAvatars);
 
 
 
