@@ -9,16 +9,16 @@ var repoName = process.argv[3];
 
 console.log('A suh dude, Welcome to the GitHub Avatar Downloader!');
 
-function checkArgs (owner, name) {
-  if ( owner === undefined || name === undefined) {
-    console.log( " Bruh......, enter the correct arguments");
+function checkArgs(owner, name) {
+  if (owner === undefined || name === undefined) {
+    console.log(" Bruh......, enter the correct arguments");
   } else {
-      getRepoContributors(repoOwner, repoName, getAvatars);
+    getRepoContributors(repoOwner, repoName, getAvatars);
   }
 }
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  var requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+  var requestURL = 'https://' + GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   var string = ''
   var options = {
     url: requestURL,
@@ -28,13 +28,13 @@ function getRepoContributors(repoOwner, repoName, cb) {
   };
 
   request.get(options)
-  .on('error', function(err) {
-    console.log(err);
-  })
-  .on('response', function(response) {
-    console.log('Response Status Code: ', response.statusCode);
+    .on('error', function(err) {
+      console.log(err);
+    })
+    .on('response', function(response) {
+      console.log('Response Status Code: ', response.statusCode);
 
-  })
+    })
 
   .on('data', function(data) {
     string += data;
@@ -47,30 +47,34 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
 }
 
-var  getAvatars = function(jsonOBJ) {
-  for(var i in jsonOBJ){
+function downloadImageByURL(url, filePath, userName) {
+  var stream = request.get(url)
+    .on('error', function(err) {
+      throw err;
+    })
+
+  .on('response', function(response) {
+    extention = response.headers['content-type'].split('/')
+    stream.pipe(fs.createWriteStream(filePath + '/' + userName + "." + extention[1]));
+    console.log('Hold up fam, downloading avatar....');
+    console.log("Download Complete: See who helped to link and build the vision, my guy!");
+
+  })
+
+  .on('end', function(response) {
+    console.log("Download Complete: See who helped to link and build the vision, my guy!");
+  })
+
+}
+
+var getAvatars = function(jsonOBJ) {
+  for (var i in jsonOBJ) {
     downloadImageByURL(jsonOBJ[i].avatar_url, 'avatars', jsonOBJ[i].login);
   }
-  console.log(jsonOBJ[i].avatar_url);
+  //console.log(jsonOBJ[i].avatar_url);
 }
 
-function downloadImageByURL(url, filePath, userName) {
-  request.get(url)
-    .on('error', function(err) {
-      console.log("ERROR",err);
-    })
 
-    .on('data', function(data) {
-       console.log('Hold up fam, downloading avatar....');
-       console.log("Download Complete: See who helped to link and build the vision, my guy!");
-
-    })
-
-    .on('end', function() {
-    })
-    .pipe(fs.createWriteStream(filePath + '/' + userName));
-
-}
 
 checkArgs(repoOwner, repoName);
 
