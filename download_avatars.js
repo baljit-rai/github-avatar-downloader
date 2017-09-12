@@ -1,5 +1,7 @@
-var request = require('request');
+
+var fs = require('fs');
 var https = require('https');
+var request = require('request');
 var GITHUB_USER = "baljit-rai";
 var GITHUB_TOKEN = "6856000a09972c30cd8a887e42dc0a56afbc896e";
 var UserAgent = 'baljit-rai: ';
@@ -18,11 +20,11 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
   request.get(options)
   .on('error', function(err) {
-    throw err;
+    console.log(err);
   })
   .on('response', function(response) {
     console.log('Response Status Code: ', response.statusCode);
-    console.log('Put your feet up fam, downloading avatar....');
+
   })
 
   .on('data', function(data) {
@@ -30,7 +32,6 @@ function getRepoContributors(repoOwner, repoName, cb) {
   })
 
   .on('end', function() {
-    console.log("Download Complete: See who helped to link and build the vision, my guy!");
     string = JSON.parse(string);
     cb(string);
   })
@@ -38,9 +39,27 @@ function getRepoContributors(repoOwner, repoName, cb) {
 }
 
 var  getAvatars = function(jsonOBJ) {
-  var i = 1
-  for(var j in jsonOBJ)
-    console.log(jsonOBJ[j].avatar_url);
+  for(var i in jsonOBJ){
+    downloadImageByURL(jsonOBJ[i].avatar_url, 'avatars', jsonOBJ[i].login);
+  }
+  console.log(jsonOBJ[i].avatar_url);
+}
+
+function downloadImageByURL(url, filePath, userName) {
+  request.get(url)
+    .on('error', function(err) {
+      console.log("ERROR",err);
+    })
+
+    .on('data', function(data) {
+       console.log('Put your feet up fam, downloading avatar....');
+    })
+
+    .on('end', function() {
+      console.log("Download Complete: See who helped to link and build the vision, my guy!");
+    })
+    .pipe(fs.createWriteStream(filePath + '/' + userName));
+
 }
 
 
